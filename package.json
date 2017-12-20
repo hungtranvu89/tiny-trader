@@ -2,7 +2,7 @@
   "name": "tiny-trader",
   "version": "1.0.0",
   "description": "Inspired by [backtrader](https://www.backtrader.com/docu)",
-  "main": "index.js",
+  "main": "./TinyTrader/index.js",
   "scripts": {
     "test": "node example/index.js"
   },
