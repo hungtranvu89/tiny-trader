@@ -25,13 +25,15 @@ trader.cash = 1000;
 
 trader.fixSize = 1000;
 
-trader.optStrategy(Dummy, {
-  exitBars: _.range(3, 8),
-  smaPeriod: _.range(3, 8)
-});
+// trader.optStrategy(Dummy, {
+//   exitBars: _.range(3, 8),
+//   smaPeriod: _.range(3, 8)
+// });
 
-trader.run();
+// trader.run();
 
 // trader.setStrategy(JustHammer, { headPercent: 1 });
 
 // trader.run();
+
+trader.plot('report.html');

@@ -14,9 +14,11 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/hungtranvu89/tiny-trader#readme",
   "dependencies": {
+    "d3-node": "^1.1.3",
     "decimal.js": "^9.0.1",
     "lodash": "^4.17.4",
-    "moment": "^2.20.1"
+    "moment": "^2.20.1",
+    "techan": "^0.8.0"
   },
   "devDependencies": {
     "eslint": "^4.13.1"

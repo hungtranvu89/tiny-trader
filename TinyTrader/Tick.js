@@ -22,18 +22,33 @@ class Tick {
   get date() {
     return this._date;
   }
+  /**
+   * @returns {Decimal.Instance}
+   */
   get open() {
     return this._open;
   }
+  /**
+   * @returns {Decimal.Instance}
+   */
   get high() {
     return this._high;
   }
+  /**
+   * @returns {Decimal.Instance}
+   */
   get low() {
     return this._low;
   }
+  /**
+   * @returns {Decimal.Instance}
+   */
   get close() {
     return this._close;
   }
+  /**
+   * @returns {number}
+   */
   get volume() {
     return this._volume;
   }

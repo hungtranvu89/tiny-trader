@@ -3,6 +3,7 @@ const Strategy = require('./Strategy'); // eslint-disable-line
 const Tick = require('./Tick'); // eslint-disable-line
 const Indicator = require('./Indicator'); // eslint-disable-line
 const Order = require('./Order');
+const graph = require('./graphs/graph');
 const { ORDER_TYPE, ORDER_STATUS } = require('./Constants');
 
 class Trader {
@@ -242,6 +243,12 @@ class Trader {
         ? 0
         : this._ticks[this._current].close.mul(this._hold);
     return this.cash.plus(plusHold);
+  }
+
+  plot(path, opt = {}) {
+    const { width = 1000, height = 800 } = opt;
+    if (!path) throw new URIError('Path must be provided');
+    return graph.plot(this._ticks, width, height, path);
   }
 }
 
