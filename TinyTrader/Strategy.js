@@ -34,16 +34,22 @@ class Strategy {
   }
 
   buy(params = {}) {
-    const size = params.size;
+    const size = params.size || 1;
+    const price = params.price || this.ticks[this.current].high;
     return this.trader.buy({
-      size
+      size,
+      price,
+      date: this.ticks[this.current].date
     });
   }
 
   sell(params = {}) {
-    const size = params.size;
+    const size = params.size || 1;
+    const price = params.price || this.ticks[this.current].low;
     return this.trader.sell({
-      size
+      size,
+      price,
+      date: this.ticks[this.current].date
     });
   }
 

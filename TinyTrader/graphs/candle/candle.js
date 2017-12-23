@@ -2,50 +2,18 @@
 const d3n = require('d3-node');
 const d3 = d3n().d3;
 const techan = require('techan');
-
-const styles = `
-body {
-  font: 10px sans-serif;
-}
-
-text {
-  fill: #000;
-}
-
-button {
-  position: absolute;
-  right: 20px;
-  top: 440px;
-  display: none;
-}
-
-path.candle {
-  stroke: #000000;
-}
-
-path.candle.body {
-  stroke-width: 0;
-}
-
-path.candle.up {
-  fill: #00aa00;
-  stroke: #00aa00;
-}
-
-path.candle.down {
-  fill: #ff0000;
-  stroke: #ff0000;
-}
-`;
+const styles = require('./candle.styles');
 
 const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+
+const orient = d => (d.type.startsWith('buy') ? 'up' : 'down');
 
 /**
  * 
  * @param {{svg:Selection, data:[object]}} args 
  */
 const render = args => {
-  const { svg, data = [] } = args;
+  const { svg, data = [], trades = [] } = args;
 
   const width = svg.attr('width') - margin.left - margin.right;
   const height = svg.attr('height') - margin.top - margin.bottom;
@@ -55,6 +23,12 @@ const render = args => {
   const y = d3.scaleLinear().range([height, 0]);
 
   const candlestick = techan.plot.candlestick().xScale(x).yScale(y);
+
+  const tradearrow = techan.plot
+    .tradearrow()
+    .xScale(x)
+    .yScale(y)
+    .orient(orient);
 
   const xAxis = d3.axisBottom().scale(x);
 
@@ -71,6 +45,8 @@ const render = args => {
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
   plot.append('g').attr('class', 'candlestick');
+
+  plot.append('g').attr('class', 'tradearrow');
 
   plot
     .append('g')
@@ -94,6 +70,7 @@ const render = args => {
   y.domain(techan.scale.plot.ohlc(dt, candlestick.accessor()).domain());
 
   plot.selectAll('g.candlestick').datum(dt).call(candlestick);
+  plot.selectAll('g.tradearrow').datum(trades).call(tradearrow);
   plot.selectAll('g.x.axis').call(xAxis);
   plot.selectAll('g.y.axis').call(yAxis);
 
@@ -101,6 +78,6 @@ const render = args => {
 };
 
 module.exports = {
-  styles,
-  render
+  render,
+  styles
 };

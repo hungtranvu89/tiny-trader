@@ -32,8 +32,8 @@ trader.fixSize = 1000;
 
 // trader.run();
 
-// trader.setStrategy(JustHammer, { headPercent: 1 });
+trader.setStrategy(JustHammer, { headPercent: 1 });
 
-// trader.run();
+trader.run();
 
 trader.plot('report.html');

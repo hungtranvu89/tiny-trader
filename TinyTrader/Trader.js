@@ -141,33 +141,37 @@ class Trader {
     this._strategy.onStop();
   }
 
+  /**
+   * 
+   * @param {Tick} tick 
+   */
   _processOrders(tick) {
     this._orders.forEach(
       /**
        * @param {Order} order
        */
       order => {
-        // force forward
-        if (order.type === ORDER_TYPE.BUY) {
-          this._makeLongTrade(order, tick);
-        }
-        if (order.type === ORDER_TYPE.SELL) {
-          this._makeShortTrade(order, tick);
+        if (!order.executed) {
+          // force forward
+          if (order.type === ORDER_TYPE.BUY) {
+            this._makeLongTrade(order);
+          }
+          if (order.type === ORDER_TYPE.SELL) {
+            this._makeShortTrade(order);
+          }
         }
       }
     );
-    this._orders = [];
   }
 
   /**
    * 
-   * @param {Order} order 
-   * @param {Tick} tick 
+   * @param {Order} order
    */
-  _makeLongTrade(order, tick) {
+  _makeLongTrade(order) {
     const commission = this.commission;
     // buy at open
-    const price = tick.open;
+    const price = order.price;
     let value = price.mul(order.size);
     let size = order.size;
     if (value.gt(this.cash)) {
@@ -180,7 +184,9 @@ class Trader {
       // force forward
       order.status = ORDER_STATUS.COMPLETED;
       order.executed = {
+        date: order.date, // immediately
         price,
+        size, // fully
         value,
         commission
       };
@@ -193,11 +199,11 @@ class Trader {
    * @param {Order} order 
    * @param {Tick} tick 
    */
-  _makeShortTrade(order, tick) {
+  _makeShortTrade(order) {
     if (this._hold > 0) {
       const commission = this.commission;
       // sell at open
-      const price = tick.open;
+      const price = order.price;
       let value = price.mul(order.size);
       let size = order.size;
 
@@ -211,6 +217,8 @@ class Trader {
       // force forward
       order.status = ORDER_STATUS.COMPLETED;
       order.executed = {
+        date: order.date, // immediately
+        size, // fully
         price,
         value,
         commission
@@ -223,17 +231,17 @@ class Trader {
     this._strategy.next();
   }
 
-  buy({ size }) {
+  buy({ size, price, date }) {
     const orderSize = size || this.fixSize || 1;
     return this._orders.push(
-      new Order({ size: orderSize, type: ORDER_TYPE.BUY })
+      new Order({ size: orderSize, type: ORDER_TYPE.BUY, price, date })
     );
   }
 
-  sell({ size }) {
+  sell({ size, price, date }) {
     const orderSize = size || this.fixSize || this._hold;
     return this._orders.push(
-      new Order({ size: orderSize, type: ORDER_TYPE.SELL })
+      new Order({ size: orderSize, type: ORDER_TYPE.SELL, price, date })
     );
   }
 
@@ -248,7 +256,7 @@ class Trader {
   plot(path, opt = {}) {
     const { width = 1000, height = 800 } = opt;
     if (!path) throw new URIError('Path must be provided');
-    return graph.plot(this._ticks, width, height, path);
+    return graph.plot(this._ticks, this._orders, width, height, path);
   }
 }
 
