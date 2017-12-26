@@ -112,7 +112,7 @@ class Trader {
     this._strategy.indicators.forEach(ind => {
       ind.ticks = [];
     });
-    this._ticks.forEach((tick, tickIdx) => {
+    this._ticks.slice().forEach((tick, tickIdx) => {
       // run all data for indicators
       this._strategy.indicators.forEach(ind => {
         ind.ticks.push(tick);
@@ -120,7 +120,7 @@ class Trader {
         tick.setIndicatorValue(ind.name, ind.next());
       });
 
-      if (tickIdx < this._current) {
+      if (tickIdx <= this._current) {
         // refetch old data
         this._strategy.ticks.push(tick);
       } else {

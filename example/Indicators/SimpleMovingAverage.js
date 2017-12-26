@@ -20,10 +20,11 @@ class SMA extends Indicator {
     let up = false;
     let down = false;
     if (this.current > this._period * 2) {
-      up = val.gt(range[this._period - 2].indicators[this.name].val);
-      down = val.lt(range[this._period - 2].indicators[this.name].val);
+      const prev = range.length - 2;
+      up = val.gt(range[prev].indicators[this.name].val);
+      down = val.lt(range[prev].indicators[this.name].val);
 
-      for (let i = this.period - 2; i > 0; i--) {
+      for (let i = prev; i > 0; i--) {
         if (
           range[i].indicators[this.name] &&
           range[i - 1].indicators[this.name]

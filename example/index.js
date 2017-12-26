@@ -37,4 +37,13 @@ trader.setStrategy(Dummy, { exitBars: 5, smaPeriod: 3 });
 
 trader.run();
 
+const liveTrader = new tnt.Trader('live');
+liveTrader.cash = 10000;
+
+liveTrader.setStrategy(Dummy, { exitBars: 5, smaPeriod: 3 });
+ticks.forEach(t => {
+  liveTrader.addData([t]);
+  liveTrader.run();
+});
+
 trader.plot('report.html');
