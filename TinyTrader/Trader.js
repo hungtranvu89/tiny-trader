@@ -7,7 +7,8 @@ const graph = require('./graphs/graph');
 const { ORDER_TYPE, ORDER_STATUS } = require('./Constants');
 
 class Trader {
-  constructor() {
+  constructor(name, opts = {}) {
+    this.name = name;
     this._cash = new Decimal(0);
     this._strategy = null;
     this._ticks = [];
@@ -254,9 +255,16 @@ class Trader {
   }
 
   plot(path, opt = {}) {
-    const { width = 1000, height = 800 } = opt;
+    const { width = 1600, height = 800 } = opt;
     if (!path) throw new URIError('Path must be provided');
-    return graph.plot(this._ticks, this._orders, width, height, path);
+    return graph.plot(
+      this.name,
+      this._ticks,
+      this._orders,
+      width,
+      height,
+      path
+    );
   }
 }
 

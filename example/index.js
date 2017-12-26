@@ -21,9 +21,9 @@ const ticks = input.map(
 
 trader.addData(ticks);
 
-trader.cash = 1000;
+trader.cash = 10000;
 
-trader.fixSize = 1000;
+trader.fixSize = 1;
 
 // trader.optStrategy(Dummy, {
 //   exitBars: _.range(3, 8),
@@ -32,7 +32,8 @@ trader.fixSize = 1000;
 
 // trader.run();
 
-trader.setStrategy(JustHammer, { headPercent: 1 });
+// trader.setStrategy(JustHammer, { headPercent: 1 });
+trader.setStrategy(Dummy, { exitBars: 5, smaPeriod: 3 });
 
 trader.run();
 

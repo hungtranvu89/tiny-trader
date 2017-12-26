@@ -1,8 +1,6 @@
 const D3Node = require('d3-node');
 const utils = require('../../utils');
-const candleGraph = require('./candle/candle');
-const volumeGraph = require('./volume/volume');
-
+const bigChart = require('./BigChart/BigChart');
 const Tick = require('../Tick'); // eslint-disable-line
 const Order = require('../Order'); // eslint-disable-line
 const Constants = require('../Constants');
@@ -15,7 +13,7 @@ const Constants = require('../Constants');
  * @param {number} height 
  * @param {string} destination 
  */
-const plot = (ticks, orders, width, height, destination) => {
+const plot = (name, ticks, orders, width, height, destination) => {
   const data = ticks.map(t => ({
     date: t.date.toDate(),
     open: t.open.toNumber(),
@@ -33,11 +31,22 @@ const plot = (ticks, orders, width, height, destination) => {
   }));
 
   const d3n = new D3Node({
-    styles: `${candleGraph.styles}${volumeGraph.styles}`
+    styles: bigChart.styles
   });
-  const svg = d3n.createSVG(width, height);
-  candleGraph.render({ svg, data, trades });
-  volumeGraph.render({ svg, data });
+
+  const chart = new bigChart.Chart({
+    name,
+    data,
+    trades,
+    d3: d3n.d3,
+    preroll: 10,
+    width,
+    height
+  });
+  // console.log(chart.name);
+
+  const svg = d3n.createSVG();
+  chart.render(svg, width, height);
   return utils.writeFile(destination, d3n.html());
 };
 
