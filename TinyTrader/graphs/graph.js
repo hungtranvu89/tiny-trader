@@ -1,6 +1,5 @@
 const D3Node = require('d3-node');
-const utils = require('../../utils');
-const bigChart = require('./BigChart/BigChart');
+const smallChart = require('./SmallChart/SmallChart');
 const Tick = require('../Tick'); // eslint-disable-line
 const Order = require('../Order'); // eslint-disable-line
 const Constants = require('../Constants');
@@ -10,10 +9,9 @@ const Constants = require('../Constants');
  * @param {[Tick]} ticks
  * @param {[Order]} orders
  * @param {number} width 
- * @param {number} height 
- * @param {string} destination 
+ * @param {number} height
  */
-const plot = (name, ticks, orders, width, height, destination) => {
+const plot = (name, ticks, orders, width, height, indicators = []) => {
   const data = ticks.map(t => ({
     date: t.date.toDate(),
     open: t.open.toNumber(),
@@ -30,24 +28,27 @@ const plot = (name, ticks, orders, width, height, destination) => {
     quantity: o.executed.size
   }));
 
-  const d3n = new D3Node({
-    styles: bigChart.styles
-  });
+  const styles =
+    smallChart.styles + indicators.map(ind => ind.styles()).join('');
 
-  const chart = new bigChart.Chart({
+  const d3n = new D3Node({ styles });
+
+  const chart = new smallChart.Chart({
     name,
     data,
     trades,
     d3: d3n.d3,
-    preroll: 10,
     width,
     height
   });
   // console.log(chart.name);
 
   const svg = d3n.createSVG();
-  chart.render(svg, width, height);
-  return utils.writeFile(destination, d3n.html());
+  const plot = chart.render(svg, width, height);
+
+  indicators.forEach(indPl => indPl.plot(plot));
+
+  return d3n;
 };
 
 module.exports = {

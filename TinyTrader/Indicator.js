@@ -13,6 +13,13 @@ class Indicator {
   next() {
     return null;
   }
+
+  styles() {
+    return '';
+  }
+  plot({ svg, plot }) {
+    return;
+  }
 }
 
 module.exports = Indicator;

@@ -5,6 +5,7 @@ const Indicator = require('./Indicator'); // eslint-disable-line
 const Order = require('./Order');
 const graph = require('./graphs/graph');
 const { ORDER_TYPE, ORDER_STATUS } = require('./Constants');
+const utils = require('../utils');
 
 class Trader {
   constructor(name, opts = {}) {
@@ -87,6 +88,7 @@ class Trader {
     if (!this._opting) return this._run();
     this._strategies.forEach(strategy => {
       const saved = {
+        ticks: this._ticks.slice(),
         cash: this.cash,
         strategy: this._strategy,
         orders: this._orders.slice(),
@@ -98,6 +100,7 @@ class Trader {
       this._run();
 
       this.cash = saved.cash;
+      this._ticks = saved.ticks.slice();
       this._strategy = saved.strategy;
       this._orders = saved.orders.slice();
       this._hold = saved.hold;
@@ -112,7 +115,7 @@ class Trader {
     this._strategy.indicators.forEach(ind => {
       ind.ticks = [];
     });
-    this._ticks.slice().forEach((tick, tickIdx) => {
+    this._ticks.forEach((tick, tickIdx) => {
       // run all data for indicators
       this._strategy.indicators.forEach(ind => {
         ind.ticks.push(tick);
@@ -257,14 +260,15 @@ class Trader {
   plot(path, opt = {}) {
     const { width = 1600, height = 800 } = opt;
     if (!path) throw new URIError('Path must be provided');
-    return graph.plot(
+    const gr = graph.plot(
       this.name,
       this._ticks,
       this._orders,
       width,
       height,
-      path
+      this._strategy.indicators
     );
+    return utils.writeFile(path, gr.html());
   }
 }
 
