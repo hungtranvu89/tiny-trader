@@ -258,7 +258,7 @@ class Trader {
   }
 
   plot(path, opt = {}) {
-    const { width = 1600, height = 800 } = opt;
+    const { width = 1600, height = 800, type = 'candle' } = opt;
     if (!path) throw new URIError('Path must be provided');
     const gr = graph.plot(
       this.name,
@@ -266,7 +266,8 @@ class Trader {
       this._orders,
       width,
       height,
-      this._strategy.indicators
+      this._strategy.indicators,
+      type
     );
     return utils.writeFile(path, gr.html());
   }

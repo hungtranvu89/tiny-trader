@@ -2,7 +2,7 @@ const techan = require('techan');
 const styles = require('./SmallChart.styles');
 
 class SmallChart {
-  constructor({ name, data, trades, d3, width, height }) {
+  constructor({ name, data, trades, d3, width, height, type = 'candle' }) {
     this.dim = {
       width: width,
       height: height,
@@ -41,7 +41,10 @@ class SmallChart {
     this.yVolume = d3
       .scaleLinear()
       .range([yRange[0], yRange[0] - 0.2 * yRange[0]]);
-    this.candlestick = techan.plot.candlestick().xScale(this.x).yScale(this.y);
+    this.candlestick =
+      type === 'ohlc'
+        ? techan.plot.ohlc().xScale(this.x).yScale(this.y)
+        : techan.plot.candlestick().xScale(this.x).yScale(this.y);
     const accessor = this.candlestick.accessor();
     this.data.sort((a, b) => d3.ascending(accessor.d(a), accessor.d(b)));
     this.volume = techan.plot

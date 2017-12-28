@@ -11,7 +11,7 @@ const Constants = require('../Constants');
  * @param {number} width 
  * @param {number} height
  */
-const plot = (name, ticks, orders, width, height, indicators = []) => {
+const plot = (name, ticks, orders, width, height, indicators = [], type) => {
   const data = ticks.map(t => ({
     date: t.date.toDate(),
     open: t.open.toNumber(),
@@ -39,7 +39,8 @@ const plot = (name, ticks, orders, width, height, indicators = []) => {
     trades,
     d3: d3n.d3,
     width,
-    height
+    height,
+    type
   });
   // console.log(chart.name);
 

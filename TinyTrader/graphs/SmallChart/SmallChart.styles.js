@@ -93,4 +93,17 @@ path.tradearrow {
   .tradearrow path.highlight.sell {
     stroke: #9900FF;
   }
+
+  path.ohlc {
+    stroke: #000000;
+    stroke-width: 1;
+}
+
+path.ohlc.up {
+    stroke: #00AA00;
+}
+
+path.ohlc.down {
+    stroke: #FF0000;
+}
 `;

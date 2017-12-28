@@ -46,4 +46,4 @@ ticks.forEach(t => {
   liveTrader.run();
 });
 
-trader.plot('report.html');
+trader.plot('report.html', { type: 'ohlc' });
