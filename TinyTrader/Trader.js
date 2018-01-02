@@ -158,10 +158,10 @@ class Trader {
         if (!order.executed) {
           // force forward
           if (order.type === ORDER_TYPE.BUY) {
-            this._makeLongTrade(order);
+            this._makeBuyTrade(order);
           }
           if (order.type === ORDER_TYPE.SELL) {
-            this._makeShortTrade(order);
+            this._makeSellTrade(order);
           }
         }
       }
@@ -172,7 +172,7 @@ class Trader {
    * 
    * @param {Order} order
    */
-  _makeLongTrade(order) {
+  _makeBuyTrade(order) {
     const commission = this.commission;
     // buy at open
     const price = order.price;
@@ -203,7 +203,7 @@ class Trader {
    * @param {Order} order 
    * @param {Tick} tick 
    */
-  _makeShortTrade(order) {
+  _makeSellTrade(order) {
     if (this._hold > 0) {
       const commission = this.commission;
       // sell at open
